@@ -1,0 +1,175 @@
+---
+title: "GoodmanDataAnalysis"
+output: html_document
+date: "2023-11-29"
+---
+
+```{r}
+library(dplyr)
+library(stringr)
+library(relaimpo)
+
+GD <- read.csv("GoodmanDataset.csv",header=TRUE)
+head(GD)
+```
+
+```{r}
+third_codons = function(seq) {
+  sub = ""
+  for (i in c(6,9,12,15,18,21,24,27,30)) {
+    sub = paste(sub, substring(seq, i,i), sep="")
+  }
+  return(sub)
+}
+
+#GD = GD %>% select(Name, CDS.seq, Prot.FCC) 
+GD = GD %>% mutate(Codon.Pos.3=third_codons(CDS.seq), Codon.Pos.Last=substring(CDS.seq,33,33))
+
+GD = GD %>% mutate(A_freq=str_count(Codon.Pos.3, 'A'),
+                   T_freq=str_count(Codon.Pos.3, 'T'),
+                   G_freq=str_count(Codon.Pos.3, 'G'),
+                   C_freq=str_count(Codon.Pos.3, 'C'))
+GD = GD %>% mutate(A_out=str_count(Codon.Pos.Last, 'A'),
+                   T_out=str_count(Codon.Pos.Last, 'T'),
+                   G_out=str_count(Codon.Pos.Last, 'G'),
+                   C_out=str_count(Codon.Pos.Last, 'C'))
+GD
+```
+
+```{r}
+third_codons = function(seq) {
+  sub = ""
+  for (i in c(6,9,12,15,18,21,24,27,30)) {
+    sub = paste(sub, substring(seq, i,i), sep="")
+  }
+  return(sub)
+}
+
+
+#GDA = GD %>% select(Name, CDS.seq, Prot.FCC) 
+GDA = GD %>% mutate(CP2=substring(CDS.seq,6,6),
+                   CP3=substring(CDS.seq,9,9),
+                   CP4=substring(CDS.seq,12,12),
+                   CP5=substring(CDS.seq,15,15),
+                   CP6=substring(CDS.seq,18,18),
+                   CP7=substring(CDS.seq,21,21),
+                   CP8=substring(CDS.seq,24,24),
+                   CP9=substring(CDS.seq,27,27),
+                   CP10=substring(CDS.seq,30,30),
+                   CP11=substring(CDS.seq,33,33))
+
+GDA = GDA %>% mutate(cdn2=str_count(CP2, c('A|T')),
+                   cdn3=str_count(CP3, c('A|T')),
+                   cdn4=str_count(CP4, c('A|T')),
+                   cdn5=str_count(CP5, c('A|T')),
+                   cdn6=str_count(CP6, c('A|T')),
+                   cdn7=str_count(CP7, c('A|T')),
+                   cdn8=str_count(CP8, c('A|T')),
+                   cdn9=str_count(CP9, c('A|T')),
+                   cdn10=str_count(CP10, c('A|T')),
+                   cdn11=str_count(CP11, c('A|T')))
+
+
+GDA = GDA[-c(4:13)]
+
+GDA = GDA %>% rowwise() %>% 
+  mutate(cdmean=sum(cdn2,cdn3,cdn4,cdn5,cdn6,cdn7,cdn8,cdn9,cdn10,cdn11)/9) %>%
+  mutate(cdm2=cdmean-cdn2/9, 
+         cdm3=cdmean-cdn3/9,
+         cdm4=cdmean-cdn4/9,
+         cdm5=cdmean-cdn5/9,
+         cdm6=cdmean-cdn6/9,
+         cdm7=cdmean-cdn7/9,
+         cdm8=cdmean-cdn8/9,
+         cdm9=cdmean-cdn9/9,
+         cdm10=cdmean-cdn10/9,
+         cdm11=cdmean-cdn11/9,)
+
+GDA
+```
+
+```{r}
+
+m2 <- lm(unlist(GDA$Prot.FCC)~unlist(GDA$cdn2) + GDA$cdm2)
+rel_r2 <- calc.relimp(m2, rela=TRUE)
+rel_nr2 <- calc.relimp(m2)
+rel_infl2 <- rel_r2$lmg[1]
+rel_abs_infl2 <- rel_nr2$lmg[1]
+
+m3 <- lm(unlist(GDA$Prot.FCC)~unlist(GDA$cdn3) + GDA$cdm3)
+rel_r3 <- calc.relimp(m3, rela=TRUE)
+rel_nr3 <- calc.relimp(m3)
+rel_infl3 <- rel_r3$lmg[1]
+rel_abs_infl3 <- rel_nr3$lmg[1]
+
+m4 <- lm(unlist(GDA$Prot.FCC)~unlist(GDA$cdn4) + GDA$cdm4)
+rel_r4 <- calc.relimp(m4, rela=TRUE)
+rel_nr4 <- calc.relimp(m4)
+rel_infl4 <- rel_r4$lmg[1]
+rel_abs_infl4 <- rel_nr4$lmg[1]
+
+m5 <- lm(unlist(GDA$Prot.FCC)~unlist(GDA$cdn5) + GDA$cdm5)
+rel_r5 <- calc.relimp(m5, rela=TRUE)
+rel_nr5 <- calc.relimp(m5)
+rel_infl5 <- rel_r5$lmg[1]
+rel_abs_infl5 <- rel_nr5$lmg[1]
+
+m6 <- lm(unlist(GDA$Prot.FCC)~unlist(GDA$cdn6) + GDA$cdm6)
+rel_r6 <- calc.relimp(m6, rela=TRUE)
+rel_nr6 <- calc.relimp(m6)
+rel_infl6 <- rel_r6$lmg[1]
+rel_abs_infl6 <- rel_nr6$lmg[1]
+
+m7 <- lm(unlist(GDA$Prot.FCC)~unlist(GDA$cdn7) + GDA$cdm7)
+rel_r7 <- calc.relimp(m7, rela=TRUE)
+rel_nr7 <- calc.relimp(m7)
+rel_infl7 <- rel_r7$lmg[1]
+rel_abs_infl7 <- rel_nr7$lmg[1]
+
+m8 <- lm(unlist(GDA$Prot.FCC)~unlist(GDA$cdn8) + GDA$cdm8)
+rel_r8 <- calc.relimp(m8, rela=TRUE)
+rel_nr8 <- calc.relimp(m8)
+rel_infl8 <- rel_r8$lmg[1]
+rel_abs_infl8 <- rel_nr8$lmg[1]
+
+m9 <- lm(unlist(GDA$Prot.FCC)~unlist(GDA$cdn9) + GDA$cdm9)
+rel_r9 <- calc.relimp(m9, rela=TRUE)
+rel_nr9 <- calc.relimp(m9)
+rel_infl9 <- rel_r9$lmg[1]
+rel_abs_infl9 <- rel_nr9$lmg[1]
+
+m10 <- lm(unlist(GDA$Prot.FCC)~unlist(GDA$cdn10) + GDA$cdm10)
+rel_r10 <- calc.relimp(m10, rela=TRUE)
+rel_nr10 <- calc.relimp(m10)
+rel_infl10 <- rel_r10$lmg[1]
+rel_abs_infl10 <- rel_nr10$lmg[1]
+
+m11 <- lm(unlist(GDA$Prot.FCC)~unlist(GDA$cdn11) + GDA$cdm11)
+rel_r11 <- calc.relimp(m11, rela=TRUE)
+rel_nr11 <- calc.relimp(m11)
+rel_infl11 <- rel_r11$lmg[1]
+rel_abs_infl11 <- rel_nr11$lmg[1]
+```
+
+```{r}
+rel_imp = c(rel_abs_infl2,rel_abs_infl3,rel_abs_infl4,rel_abs_infl5,rel_abs_infl6,rel_abs_infl7,rel_abs_infl8,rel_abs_infl9,rel_abs_infl10,rel_abs_infl11)
+cdn_n = c('2','3','4','5','6','7','8','9','10','11')
+
+plot(cdn_n,rel_imp,
+     type="o",
+     xlab = "Codon Number",
+     ylab = "Absolute Relative Importance")
+#curve(1/11 *exp(-x/2.7) +0.002, add=TRUE)
+```
+```{r}
+m <- lm(GDA$Prot.FCC~GDA$cdn2+GDA$cdn3+GDA$cdn4+GDA$cdn5+GDA$cdn6+GDA$cdn7+GDA$cdn8+GDA$cdn9+GDA$cdn10+GDA$cdn11)
+rel_r <- calc.relimp(m, rela=TRUE)
+rel_nr <- calc.relimp(m)
+rel_infl <- rel_r$lmg[1]
+rel_abs_infl <- rel_nr$lmg[1]
+```
+```{r}
+plot(rel_nr, names.arg=c("group1","group2","group3","group4","group5"))
+```
+
+

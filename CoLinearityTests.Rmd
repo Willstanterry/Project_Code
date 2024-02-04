@@ -1,0 +1,109 @@
+---
+title: "GoodmanTableData"
+output: html_document
+date: "2023-11-28"
+---
+
+```{r}
+GD2 <- GoodmanData[GoodmanData$CodonNumber==2,]
+anova2 = aov(GD2$Prot.FCC~GD2$Nucleotide)
+summary(anova2)
+```
+```{r}
+GD3 <- GoodmanData[GoodmanData$CodonNumber==3,]
+anova3 = aov(GD3$Prot.FCC~GD3$Nucleotide)
+summary(anova3)
+```
+```{r}
+GD4 <- GoodmanData[GoodmanData$CodonNumber==4,]
+anova4 = aov(GD4$Prot.FCC~GD4$Nucleotide)
+summary(anova4)
+```
+```{r}
+GD5 <- GoodmanData[GoodmanData$CodonNumber==5,]
+anova5 = aov(GD5$Prot.FCC~GD5$Nucleotide)
+summary(anova5)
+```
+```{r}
+GD6 <- GoodmanData[GoodmanData$CodonNumber==6,]
+anova6 = aov(GD6$Prot.FCC~GD6$Nucleotide)
+summary(anova6)
+```
+```{r}
+GD7 <- GoodmanData[GoodmanData$CodonNumber==7,]
+anova7 = aov(GD7$Prot.FCC~GD7$Nucleotide)
+summary(anova7)
+```
+```{r}
+GD8 <- GoodmanData[GoodmanData$CodonNumber==8,]
+anova8 = aov(GD8$Prot.FCC~GD8$Nucleotide)
+summary(anova8)
+```
+```{r}
+GD9 <- GoodmanData[GoodmanData$CodonNumber==9,]
+anova9 = aov(GD9$Prot.FCC~GD9$Nucleotide)
+summary(anova9)
+```
+```{r}
+GD10 <- GoodmanData[GoodmanData$CodonNumber==10,]
+anova10 = aov(GD10$Prot.FCC~GD10$Nucleotide)
+summary(anova10)
+```
+```{r}
+GD11 <- GoodmanData[GoodmanData$CodonNumber==11,]
+anova11 = aov(GD11$Prot.FCC~GD11$Nucleotide)
+summary(anova11)
+```
+```{r}
+anova2pval = summary(anova2)[[1]][1,5]
+anova3pval = summary(anova3)[[1]][1,5]
+anova4pval = summary(anova4)[[1]][1,5]
+anova5pval = summary(anova5)[[1]][1,5]
+anova6pval = summary(anova6)[[1]][1,5]
+anova7pval = summary(anova7)[[1]][1,5]
+anova8pval = summary(anova8)[[1]][1,5]
+anova9pval = summary(anova9)[[1]][1,5]
+anova10pval = summary(anova10)[[1]][1,5]
+anova11pval = summary(anova11)[[1]][1,5]
+
+```
+```{r}
+anova_pval = c(anova2pval,anova3pval,anova4pval,anova5pval,anova6pval,anova7pval,anova8pval,anova9pval,anova10pval,anova11pval)
+cdn_n = c('2','3','4','5','6','7','8','9','10','11')
+
+plot(cdn_n,anova_pval)
+```
+```{r}
+plot(cdn_n,log(anova_pval))
+```
+
+
+```{r eval=FALSE, include=FALSE}
+GDA_0 = GD %>% filter(A_out==0) %>% select(A_freq)
+GDA_1 = GD %>% filter(A_out==1) %>% select(A_freq)
+t.test(GDA_0, GDA_1)
+kruskal.test(c(GDA_0, GDA_1))
+
+GDT_0 = GD %>% filter(T_out==0) %>% select(T_freq)
+GDT_1 = GD %>% filter(T_out==1) %>% select(T_freq)
+t.test(GDT_0, GDT_1)
+kruskal.test(c(GDT_0, GDT_1))
+
+GDG_0 = GD %>% filter(G_out==0) %>% select(G_freq)
+GDG_1 = GD %>% filter(G_out==1) %>% select(G_freq)
+t.test(GDG_0, GDG_1)
+kruskal.test(c(GDG_0, GDG_1))
+
+GDC_0 = GD %>% filter(C_out==0) %>% select(C_freq)
+GDC_1 = GD %>% filter(C_out==1) %>% select(C_freq)
+t.test(GDC_0, GDC_1)
+kruskal.test(c(GDC_0, GDC_1))
+```
+
+
+
+
+
+
+
+
